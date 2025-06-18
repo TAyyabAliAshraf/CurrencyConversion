@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Currency Conversion</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b, #86a8e7, #91eae4);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 25px;
+            animation: float 2.5s ease-in-out infinite, rotate 10s linear infinite;
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2)) brightness(1.2);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            color: white;
+            margin: 0 0 25px;
+            font-weight: 600;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            font-size: 1.7rem;
+            letter-spacing: 0.5px;
+        }
+
+        .progress {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 auto;
+            width: 200px;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #fff, #f0f0f0);
+            animation: load 5s ease-in-out forwards;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.2) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 30px 30px;
+            animation: shimmer 2s linear infinite;
+        }
+
+        @keyframes load {
+            to { width: 100%; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -30px 0; }
+            100% { background-position: 30px 0; }
+        }
+
+        .currency-symbol {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            animation: rise 8s ease-in-out infinite;
+            opacity: 0.8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-50vh) translateX(calc(10px * var(--sway)));
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(calc(20px * var(--sway)));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <svg class="icon" viewBox="0 0 24 24" fill="white">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
+    </svg>
+    <h1>Currency Conversion</h1>
+    <div class="progress">
+        <div class="progress-bar"></div>
+    </div>
+
+    <script>
+        const currencySymbols = ['$', '€', '£', '¥', '₹', '₽', '₿', '₣', '₩', '₪'];
+
+        function createCurrencySymbols() {
+            for (let i = 0; i < 12; i++) {
+                const symbol = document.createElement('div');
+                symbol.className = 'currency-symbol';
+                symbol.textContent = currencySymbols[Math.floor(Math.random() * currencySymbols.length)];
+                
+                const size = Math.random() * 20 + 15;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 6;
+                const duration = Math.random() * 8 + 6;
+                const sway = Math.random() * 2 - 1;
+                
+                symbol.style.fontSize = `${size}px`;
+                symbol.style.left = `${left}vw`;
+                symbol.style.bottom = `-${size}px`;
+                symbol.style.animationDelay = `${delay}s`;
+                symbol.style.animationDuration = `${duration}s`;
+                symbol.style.setProperty('--sway', sway);
+                
+                document.body.appendChild(symbol);
+            }
+        }
+        
+        createCurrencySymbols();
+        
+        setTimeout(() => {
+            window.location.href = "CurrencyConversion.html";
+        }, 5000);
+    </script>
+</body>
+</html>
