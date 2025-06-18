@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --accent: #f72585;
-            --light: #f8f9fa;
+            --primary: #ff7b25;
+            --secondary: #ff5200;
+            --accent: #ff3d00;
+            --light: #fff8f0;
             --dark: #212529;
-            --success: #4cc9f0;
-            --warning: #f8961e;
+            --success: #ff8a65;
+            --warning: #ff7043;
             --border-radius: 12px;
             --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
@@ -32,13 +32,18 @@
         }
 
         body {
-            background-color: var(--light);
+            background-color: #fff8f0;
+            background-image: 
+                linear-gradient(45deg, #ffecd2 25%, transparent 25%),
+                linear-gradient(-45deg, #ffecd2 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ffecd2 75%),
+                linear-gradient(-45deg, transparent 75%, #ffecd2 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
             color: var(--dark);
             line-height: 1.6;
-            background-image: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
             min-height: 100vh;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
